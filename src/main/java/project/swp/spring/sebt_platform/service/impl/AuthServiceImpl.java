@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(String userName, String password, String email) {
+    public boolean register(String userName, String password, String email, String pins) {
         try{
             // create salt and hash password
             String salt = utils.generateSalt();
@@ -62,8 +62,7 @@ public class AuthServiceImpl implements AuthService {
             UserEntity newUser = new UserEntity(userName, hashedPassword, email, salt);
 
             // create verify pins (plain text for email)
-            String plainPins = utils.generatePins();
-            String hashedPins = utils.encript(plainPins, salt);
+            String hashedPins = utils.encript(pins, salt);
             LocalDateTime expireTime = utils.getExpireTimeByDuration(30);
             VerifyPinsEntity verifyPinsEntity = new VerifyPinsEntity(hashedPins, expireTime);
 
@@ -71,14 +70,6 @@ public class AuthServiceImpl implements AuthService {
             verifyPinsEntity.setUser(newUser);
             newUser.setVerifyPins(verifyPinsEntity);
             userRepository.save(newUser);
-
-            // Send verification email with plain pins
-            try {
-                mailService.sendVerificationEmail(email, plainPins);
-            } catch (Exception e) {
-                System.err.println("Failed to send verification email: " + e.getMessage());
-                // Don't fail registration if email sending fails
-            }
 
             return true;
         } catch(Exception e){

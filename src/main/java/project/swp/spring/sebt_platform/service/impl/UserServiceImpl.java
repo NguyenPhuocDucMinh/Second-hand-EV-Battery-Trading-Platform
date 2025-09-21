@@ -32,9 +32,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean userExists(String email, String username) {
-        return false;
+    public UserEntity findUserByUserNameCaseSensitive(String userName) {
+        return userRepository.findByUsernameCaseSensitive(userName);
     }
-
 
 }

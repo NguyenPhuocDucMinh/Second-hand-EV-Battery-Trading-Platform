@@ -64,15 +64,27 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorResponse("Username must be between 3-20 characters"));
             }
-            
-            // Check if user already exists
-            if (userService.userExists(user.email(), user.username())) {
+
+            // Check if username or email already exists (case-sensitive for username)
+            UserEntity userEntity = userService.findUserByUserNameCaseSensitive(user.username());
+            if(userEntity != null) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new ErrorResponse("Email or username already exists"));
+                    .body(new ErrorResponse("Username already exists"));
+            }
+
+            userEntity = userService.findUserByEmail(user.email());
+            if (userEntity != null) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ErrorResponse("Email already exists"));
             }
             
             // Register user
-            boolean success = authService.register(user.username(), user.password(), user.email());
+            String pins = utils.generatePins();
+            boolean success = authService.register(user.username(), user.password(), user.email(), pins);
+
+            // Send verification email
+            mailService.sendVerificationEmail(user.email(), pins);
+
             if (success) {
                 return ResponseEntity.ok(new SuccessResponse(
                     "Registration successful. Please check your email for verification."));
@@ -98,7 +110,7 @@ public class AuthController {
             UserEntity loggedInUser = authService.login(user.email(), user.password());
             if (loggedInUser == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponse("Invalid email or password"));
+                    .body(new ErrorResponse("email or password is incorrect"));
             }
             
             // Check if user is activated

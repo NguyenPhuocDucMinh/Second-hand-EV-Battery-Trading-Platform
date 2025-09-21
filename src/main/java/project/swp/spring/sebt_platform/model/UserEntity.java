@@ -165,4 +165,11 @@ public class UserEntity {
         this.personalPins = personalPins;
     }
 
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }

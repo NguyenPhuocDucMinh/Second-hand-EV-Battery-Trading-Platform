@@ -9,5 +9,5 @@ public interface UserService {
     public boolean updateProfile(UserEntity userEntity);
     public UserEntity findUserById(Long id);
     public UserEntity findUserByEmail(String email);
-    public boolean userExists(String email, String username);
+    public UserEntity findUserByUserNameCaseSensitive(String userName);
 }
