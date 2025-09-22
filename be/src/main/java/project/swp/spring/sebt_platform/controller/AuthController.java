@@ -33,11 +33,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDTO user) {
         try {
-            // Validation
-            if (user.username() == null || user.username().trim().isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse("Username is required"));
-            }
+            // Input validation
             if (user.password() == null || user.password().trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorResponse("Password is required"));
@@ -58,21 +54,8 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorResponse("Password must be at least 6 characters"));
             }
-            
-            // Username length validation
-            if (user.username().length() < 3 || user.username().length() > 20) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse("Username must be between 3-20 characters"));
-            }
 
-            // Check if username or email already exists (case-sensitive for username)
-            UserEntity userEntity = userService.findUserByUserNameCaseSensitive(user.username());
-            if(userEntity != null) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new ErrorResponse("Username already exists"));
-            }
-
-            userEntity = userService.findUserByEmail(user.email());
+            UserEntity userEntity = userService.findUserByEmail(user.email());
             if (userEntity != null) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new ErrorResponse("Email already exists"));
@@ -80,7 +63,7 @@ public class AuthController {
             
             // Register user
             String pins = utils.generatePins();
-            boolean success = authService.register(user.username(), user.password(), user.email(), pins);
+            boolean success = authService.register(user.password(), user.email(), pins);
 
             // Send verification email
             mailService.sendVerificationEmail(user.email(), pins);

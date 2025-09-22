@@ -54,12 +54,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(String userName, String password, String email, String pins) {
+    public boolean register(String password, String email, String pins) {
         try{
             // create salt and hash password
             String salt = utils.generateSalt();
             String hashedPassword = utils.encript(password, salt);
-            UserEntity newUser = new UserEntity(userName, hashedPassword, email, salt);
+            UserEntity newUser = new UserEntity( hashedPassword, email, salt);
 
             // create verify pins (plain text for email)
             String hashedPins = utils.encript(pins, salt);
