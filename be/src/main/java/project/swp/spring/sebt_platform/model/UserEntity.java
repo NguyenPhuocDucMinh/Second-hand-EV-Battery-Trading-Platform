@@ -54,8 +54,8 @@ public class UserEntity {
     // Constructors
     public UserEntity() {}
 
-    public UserEntity(String userName, String password, String email, String salt) {
-        this.userName = userName;
+    public UserEntity( String password, String email, String salt) {
+        this.userName = email != null && email.contains("@") ? email.substring(0, email.indexOf("@")) : email;
         this.password = password;
         this.email = email;
         this.salt = salt;
