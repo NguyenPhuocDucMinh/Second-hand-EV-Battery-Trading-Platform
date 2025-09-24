@@ -10,9 +10,10 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity,Long> {
 
     UserEntity findUserByEmail(String email);
-    UserEntity findUserByUsername(String username);
-    UserEntity findUserEntityById(Long id);
+    UserEntity findUserByUserName(String userName);
 
+    @Query(value = "SELECT * FROM users WHERE user_name COLLATE Latin1_General_CS_AS = :username", nativeQuery = true)
+    UserEntity findByUsernameCaseSensitive(@Param("username") String username);
 
 
 }

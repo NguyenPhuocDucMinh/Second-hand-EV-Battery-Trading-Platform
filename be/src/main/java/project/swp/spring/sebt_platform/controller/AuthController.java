@@ -8,18 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.swp.spring.sebt_platform.dto.request.*;
-import project.swp.spring.sebt_platform.dto.response.ErrorResponseDTO;
-import project.swp.spring.sebt_platform.dto.response.SuccessResponseDTO;
 import project.swp.spring.sebt_platform.model.UserEntity;
-import project.swp.spring.sebt_platform.model.enums.UserRole;
-import project.swp.spring.sebt_platform.model.enums.UserStatus;
 import project.swp.spring.sebt_platform.service.AuthService;
 import project.swp.spring.sebt_platform.service.MailService;
 import project.swp.spring.sebt_platform.service.UserService;
 import project.swp.spring.sebt_platform.util.Utils;
 
 @RestController
-@RequestMapping("api/guests")
+@RequestMapping("api/auth")
 public class AuthController {
 
     @Autowired
@@ -34,35 +30,35 @@ public class AuthController {
     @Autowired
     private Utils utils;
 
-    @PostMapping("/auth/register")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDTO user) {
         try {
             // Input validation
             if (user.password() == null || user.password().trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponseDTO("Password is required"));
+                    .body(new ErrorResponse("Password is required"));
             }
             if (user.email() == null || user.email().trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponseDTO("Email is required"));
+                    .body(new ErrorResponse("Email is required"));
             }
             
             // Email format validation
             if (!user.email().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponseDTO("Invalid email format"));
+                    .body(new ErrorResponse("Invalid email format"));
             }
             
             // Password strength validation
             if (user.password().length() < 6) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponseDTO("Password must be at least 6 characters"));
+                    .body(new ErrorResponse("Password must be at least 6 characters"));
             }
 
             UserEntity userEntity = userService.findUserByEmail(user.email());
             if (userEntity != null) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new ErrorResponseDTO("Email already exists"));
+                    .body(new ErrorResponse("Email already exists"));
             }
             
             // Register user
@@ -73,37 +69,37 @@ public class AuthController {
             mailService.sendVerificationEmail(user.email(), pins);
 
             if (success) {
-                return ResponseEntity.ok(new SuccessResponseDTO(
+                return ResponseEntity.ok(new SuccessResponse(
                     "Registration successful. Please check your email for verification."));
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ErrorResponseDTO("Registration failed"));
+                    .body(new ErrorResponse("Registration failed"));
             }
         } catch (Exception e) {
             System.err.println("Registration error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponseDTO("Registration failed"));
+                .body(new ErrorResponse("Registration failed"));
         }
     }
 
-    @PostMapping("auth/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO user, HttpServletRequest request) {
         try {
             if (user.email() == null || user.password() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponseDTO("Email and password are required"));
+                    .body(new ErrorResponse("Email and password are required"));
             }
             
             UserEntity loggedInUser = authService.login(user.email(), user.password());
             if (loggedInUser == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponseDTO("email or password is incorrect"));
+                    .body(new ErrorResponse("email or password is incorrect"));
             }
             
             // Check if user is activated
-            if (loggedInUser.getStatus() != UserStatus.ACTIVE) {
+            if (!"actived".equals(loggedInUser.getStatus())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ErrorResponseDTO("Account not activated. Please verify your email first."));
+                    .body(new ErrorResponse("Account not activated. Please verify your email first."));
             }
             
             // Tạo session
@@ -123,38 +119,53 @@ public class AuthController {
                 loggedInUser.getStatus(),
                 session.getId()
             );
-
+            
             return ResponseEntity.ok(sessionDTO);
         } catch (Exception e) {
             System.err.println("Login error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponseDTO("Login failed"));
+                .body(new ErrorResponse("Login failed"));
         }
     }
 
-    @PostMapping("auth/verify-email")
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            return ResponseEntity.ok(new SuccessResponse("Logout successful"));
+        } catch (Exception e) {
+            System.err.println("Logout error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Logout failed"));
+        }
+    }
+
+    @PostMapping("/verify-email")
     public ResponseEntity<?> verifyEmail(@Valid @RequestBody UserVerifyEmailDTO user) {
         try {
             if (user.pins() == null || user.pins().trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponseDTO("PIN is required"));
+                    .body(new ErrorResponse("PIN is required"));
             }
             if (user.email() == null || user.email().trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponseDTO("Email is required"));
+                    .body(new ErrorResponse("Email is required"));
             }
             
             boolean success = authService.verifyEmail(user.email(), user.pins());
             if (success) {
-                return ResponseEntity.ok(new SuccessResponseDTO("Email verified successfully"));
+                return ResponseEntity.ok(new SuccessResponse("Email verified successfully"));
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponseDTO("Invalid PIN or email"));
+                    .body(new ErrorResponse("Invalid PIN or email"));
             }
         } catch (Exception e) {
             System.err.println("Email verification error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponseDTO("Verification failed"));
+                .body(new ErrorResponse("Verification failed"));
         }
     }
 
@@ -164,18 +175,18 @@ public class AuthController {
             HttpSession session = request.getSession(false);
             if (session == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponseDTO("No active session"));
+                    .body(new ErrorResponse("No active session"));
             }
             
             Long userId = (Long) session.getAttribute("userId");
             String username = (String) session.getAttribute("username");
             String email = (String) session.getAttribute("email");
-            UserRole role = (UserRole) session.getAttribute("role");
-            UserStatus status = (UserStatus) session.getAttribute("status");
+            String role = (String) session.getAttribute("role");
+            String status = (String) session.getAttribute("status");
             
             if (userId == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponseDTO("Invalid session"));
+                    .body(new ErrorResponse("Invalid session"));
             }
             
             UserSessionDTO sessionDTO = new UserSessionDTO(
@@ -186,7 +197,7 @@ public class AuthController {
         } catch (Exception e) {
             System.err.println("Get current user error: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponseDTO("Failed to get user information"));
+                .body(new ErrorResponse("Failed to get user information"));
         }
     }
 
@@ -209,6 +220,31 @@ public class AuthController {
         }
     }
 
+    // Helper classes for response
+    public static class SuccessResponse {
+        private String message;
+        private boolean success = true;
+
+        public SuccessResponse(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() { return message; }
+        public boolean isSuccess() { return success; }
+    }
+
+    public static class ErrorResponse {
+        private String message;
+        private boolean success = false;
+
+        public ErrorResponse(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() { return message; }
+        public boolean isSuccess() { return success; }
+    }
+
     public static class SessionCheckResponse {
         private boolean valid;
         private String message;
@@ -222,4 +258,13 @@ public class AuthController {
         public String getMessage() { return message; }
     }
 
+    public static class ResendVerificationRequest {
+        private String email;
+
+        public ResendVerificationRequest(String email) {
+            this.email = email;
+        }
+
+        public String email() { return email; }
+    }
 }

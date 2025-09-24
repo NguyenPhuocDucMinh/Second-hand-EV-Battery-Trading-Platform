@@ -14,17 +14,6 @@ import {
 function Login({ setIsLoggedIn, setUserInfo }) {
   // State quản lý form đăng nhập
   const [formData, setFormData] = useState({
-<<<<<<< Updated upstream
-    email: '',
-    password: ''
-  })
-  const [showAlert, setShowAlert] = useState(false)
-  const [alertMessage, setAlertMessage] = useState('')
-  const [alertVariant, setAlertVariant] = useState('success')
-  const [showPassword, setShowPassword] = useState(false)
-  
-  const navigate = useNavigate()
-=======
     email: "",
     password: "",
   });
@@ -34,7 +23,6 @@ function Login({ setIsLoggedIn, setUserInfo }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
->>>>>>> Stashed changes
 
   // Xử lý thay đổi input form
   const handleInputChange = (e) => {
@@ -58,13 +46,8 @@ function Login({ setIsLoggedIn, setUserInfo }) {
 
   // Xử lý submit form đăng nhập
   const handleSubmit = (e) => {
-<<<<<<< Updated upstream
-    e.preventDefault()
-    
-=======
     e.preventDefault();
 
->>>>>>> Stashed changes
     // Kiểm tra email hợp lệ
     if (!isValidEmail(formData.email)) {
       setAlertMessage("Vui lòng nhập địa chỉ email hợp lệ!");
@@ -82,19 +65,6 @@ function Login({ setIsLoggedIn, setUserInfo }) {
     }
 
     // Demo: luôn đăng nhập thành công
-<<<<<<< Updated upstream
-    setAlertMessage('Đăng nhập thành công!')
-    setAlertVariant('success')
-    setShowAlert(true)
-    
-    // Lưu thông tin user
-    const userInfo = {
-      email: formData.email,
-      fullName: 'Người dùng',
-      loginTime: new Date().toISOString()
-    }
-    
-=======
     setAlertMessage("Đăng nhập thành công!");
     setAlertVariant("success");
     setShowAlert(true);
@@ -106,7 +76,6 @@ function Login({ setIsLoggedIn, setUserInfo }) {
       loginTime: new Date().toISOString(),
     };
 
->>>>>>> Stashed changes
     // Chờ 1.5 giây rồi chuyển hướng về trang chủ
     setTimeout(() => {
       setIsLoggedIn(true);
@@ -116,17 +85,10 @@ function Login({ setIsLoggedIn, setUserInfo }) {
   };
 
   return (
-<<<<<<< Updated upstream
-    <div 
-      className="min-vh-100 d-flex align-items-center py-5" 
-      style={{ 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-=======
     <div
       className="min-vh-100 d-flex align-items-center py-5"
       style={{
         backgroundColor: "#f8f9fa",
->>>>>>> Stashed changes
       }}
     >
       <Container>
@@ -143,14 +105,6 @@ function Login({ setIsLoggedIn, setUserInfo }) {
               <Card.Body className="p-5">
                 {/* Tiêu đề form đăng nhập */}
                 <div className="text-center mb-4">
-<<<<<<< Updated upstream
-                  <div style={{ fontSize: '3rem' }}>🔋</div>
-                  <h2 className="fw-bold text-primary mb-2">
-                    Chào Mừng Trở Lại!
-                  </h2>
-                  <p className="text-muted">
-                    Đăng nhập để tiếp tục sử dụng dịch vụ
-=======
                   <h2
                     className="fw-bold mb-2"
                     style={{ color: "#416adcff", fontSize: "2.2rem" }}
@@ -160,7 +114,6 @@ function Login({ setIsLoggedIn, setUserInfo }) {
                   <p className="text-muted fs-6">
                     Đăng nhập để tiếp tục khám phá thế giới pin và EV cùng chúng
                     tôi
->>>>>>> Stashed changes
                   </p>
                 </div>
 
@@ -179,13 +132,8 @@ function Login({ setIsLoggedIn, setUserInfo }) {
                 {/* Form đăng nhập */}
                 <Form onSubmit={handleSubmit}>
                   {/* Trường email */}
-<<<<<<< Updated upstream
-                  <Form.Group className="mb-3">
-                    <Form.Label className="fw-semibold">
-=======
                   <Form.Group className="mb-4">
                     <Form.Label className="fw-semibold text-dark mb-2">
->>>>>>> Stashed changes
                       Địa Chỉ Email
                     </Form.Label>
                     <Form.Control
@@ -216,11 +164,7 @@ function Login({ setIsLoggedIn, setUserInfo }) {
 
                   {/* Trường mật khẩu với nút show/hide */}
                   <Form.Group className="mb-4">
-<<<<<<< Updated upstream
-                    <Form.Label className="fw-semibold">
-=======
                     <Form.Label className="fw-semibold text-dark mb-2">
->>>>>>> Stashed changes
                       Mật Khẩu
                     </Form.Label>
                     <InputGroup>
@@ -229,11 +173,7 @@ function Login({ setIsLoggedIn, setUserInfo }) {
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-<<<<<<< Updated upstream
-                        placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)"
-=======
                         placeholder="Nhập mật khẩu tài khoản của bạn"
->>>>>>> Stashed changes
                         required
                         style={{
                           borderRadius: "12px 0 0 12px",
@@ -255,16 +195,6 @@ function Login({ setIsLoggedIn, setUserInfo }) {
                       <Button
                         variant="light"
                         onClick={togglePasswordVisibility}
-<<<<<<< Updated upstream
-                        style={{ 
-                          borderRadius: '0 10px 10px 0',
-                          borderLeft: 'none',
-                          padding: '12px 15px'
-                        }}
-                        title={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
-                      >
-                        {showPassword ? "Ẩn" : "Hiện"}
-=======
                         style={{
                           borderRadius: "0 12px 12px 0",
                           border: "2px solid #e0e0e0",
@@ -278,20 +208,13 @@ function Login({ setIsLoggedIn, setUserInfo }) {
                         ) : (
                           <i className="bi bi-eye-fill"></i>
                         )}
->>>>>>> Stashed changes
                       </Button>
                     </InputGroup>
                   </Form.Group>
 
                   {/* Nút đăng nhập */}
-<<<<<<< Updated upstream
-                  <Button 
-                    type="submit" 
-                    variant="primary"
-=======
                   <Button
                     type="submit"
->>>>>>> Stashed changes
                     className="w-100 fw-bold py-3 mb-3"
                     style={{
                       borderRadius: "12px",
@@ -318,15 +241,9 @@ function Login({ setIsLoggedIn, setUserInfo }) {
 
                   {/* Link quên mật khẩu */}
                   <div className="text-center">
-<<<<<<< Updated upstream
-                    <Button 
-                      variant="link" 
-                      className="text-decoration-none text-muted"
-                      style={{ fontSize: '0.9rem' }}
-=======
-                    <Button
-                      variant="link"
-                      className="text-decoration-none p-0"
+                    <Link
+                      to="/forgot-password"
+                      className="text-decoration-none"
                       style={{
                         fontSize: "0.9rem",
                         color: "#6c757d",
@@ -340,7 +257,6 @@ function Login({ setIsLoggedIn, setUserInfo }) {
                         e.target.style.color = "#6c757d";
                         e.target.style.textDecoration = "none";
                       }}
->>>>>>> Stashed changes
                     >
                       Quên mật khẩu?
                     </Link>
@@ -350,18 +266,6 @@ function Login({ setIsLoggedIn, setUserInfo }) {
             </Card>
 
             {/* Footer thông tin chuyển đến đăng ký */}
-<<<<<<< Updated upstream
-            <div className="text-center mt-4 text-white">
-              <small>
-                Chưa có tài khoản? {' '}
-                <Link 
-                  to="/register"
-                  className="text-white fw-bold text-decoration-underline"
-                >
-                  Đăng ký ngay
-                </Link>
-              </small>
-=======
             <div className="text-center mt-4">
               <div
                 className="p-3 rounded-3"
@@ -392,7 +296,6 @@ function Login({ setIsLoggedIn, setUserInfo }) {
                   </Link>
                 </span>
               </div>
->>>>>>> Stashed changes
             </div>
           </Col>
         </Row>
