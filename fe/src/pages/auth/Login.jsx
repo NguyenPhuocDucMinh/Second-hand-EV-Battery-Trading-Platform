@@ -242,8 +242,8 @@ function Login({ setIsLoggedIn, setUserInfo }) {
                   {/* Link quên mật khẩu */}
                   <div className="text-center">
                     <Link
-                      to="/forgot-password"
-                      className="text-decoration-none"
+                      variant="link"
+                      className="text-decoration-none p-0"
                       style={{
                         fontSize: "0.9rem",
                         color: "#6c757d",
