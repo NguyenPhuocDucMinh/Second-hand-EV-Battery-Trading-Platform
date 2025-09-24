@@ -11,14 +11,30 @@ import project.swp.spring.sebt_platform.dto.response.*;
 import project.swp.spring.sebt_platform.service.UserService;
 
 @RestController
-@RequestMapping("/api/users")
-public class UserController {
+@RequestMapping("/api/members")
+public class MemberController {
 
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public MemberController(UserService userService) {
         this.userService = userService;
+    }
+
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            return ResponseEntity.ok(new SuccessResponseDTO("Logout successful"));
+        } catch (Exception e) {
+            System.err.println("Logout error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponseDTO("Logout failed"));
+        }
     }
 
     @PostMapping("/update-profile")

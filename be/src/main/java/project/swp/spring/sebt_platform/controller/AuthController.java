@@ -19,7 +19,7 @@ import project.swp.spring.sebt_platform.service.UserService;
 import project.swp.spring.sebt_platform.util.Utils;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("api/guests")
 public class AuthController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class AuthController {
     @Autowired
     private Utils utils;
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDTO user) {
         try {
             // Input validation
@@ -86,7 +86,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping("auth/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginDTO user, HttpServletRequest request) {
         try {
             if (user.email() == null || user.password() == null) {
@@ -132,22 +132,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) {
-        try {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.invalidate();
-            }
-            return ResponseEntity.ok(new SuccessResponseDTO("Logout successful"));
-        } catch (Exception e) {
-            System.err.println("Logout error: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponseDTO("Logout failed"));
-        }
-    }
-
-    @PostMapping("/verify-email")
+    @PostMapping("auth/verify-email")
     public ResponseEntity<?> verifyEmail(@Valid @RequestBody UserVerifyEmailDTO user) {
         try {
             if (user.pins() == null || user.pins().trim().isEmpty()) {
