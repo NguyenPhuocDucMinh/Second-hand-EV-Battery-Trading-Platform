@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.swp.spring.sebt_platform.model.UserEntity;
 import project.swp.spring.sebt_platform.model.VerifyPinsEntity;
+import project.swp.spring.sebt_platform.model.enums.UserStatus;
 import project.swp.spring.sebt_platform.repository.UserRepository;
 import project.swp.spring.sebt_platform.repository.VerifyPinsRepository;
 import project.swp.spring.sebt_platform.service.AuthService;
@@ -11,6 +12,8 @@ import project.swp.spring.sebt_platform.service.MailService;
 import project.swp.spring.sebt_platform.util.Utils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -59,16 +62,14 @@ public class AuthServiceImpl implements AuthService {
             // create salt and hash password
             String salt = utils.generateSalt();
             String hashedPassword = utils.encript(password, salt);
-            UserEntity newUser = new UserEntity( hashedPassword, email, salt);
+            UserEntity newUser = new UserEntity( email.substring(0,email.indexOf("@")),hashedPassword, email, salt);
 
             // create verify pins (plain text for email)
             String hashedPins = utils.encript(pins, salt);
             LocalDateTime expireTime = utils.getExpireTimeByDuration(30);
-            VerifyPinsEntity verifyPinsEntity = new VerifyPinsEntity(hashedPins, expireTime);
+            VerifyPinsEntity verifyPinsEntity = new VerifyPinsEntity(newUser,hashedPins, expireTime);
 
-            // set relationship
-            verifyPinsEntity.setUser(newUser);
-            newUser.setVerifyPins(verifyPinsEntity);
+            newUser.setVerifyPins(List.of(verifyPinsEntity));
             userRepository.save(newUser);
 
             return true;
@@ -83,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
         // Check if user exists
         UserEntity user = userRepository.findUserByEmail(email);
         if(user == null) return false;
-        if(user.getStatus().equals("actived")) return true;
+        if(user.getStatus().equals(UserStatus.ACTIVE)) return true;
 
         // Check if pins match and not expired
         VerifyPinsEntity userPins = verifyPinsRepository.findByUser_Id(user.getId());
@@ -91,8 +92,8 @@ public class AuthServiceImpl implements AuthService {
 
         // Encrypt input pins and compare
         pins = utils.encript(pins, user.getSalt());
-        if(pins.equals(userPins.getPins())){
-            user.setStatus("actived");
+        if(pins.equals(userPins.getPin())){
+            user.setStatus(UserStatus.ACTIVE);
             userRepository.save(user);
             return true;
         }

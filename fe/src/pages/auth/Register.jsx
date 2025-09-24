@@ -345,4 +345,8 @@ function Register({ setIsLoggedIn, setUserInfo }) {
   );
 }
 
+<<<<<<< Updated upstream
+export default Register
+=======
 export default Register;
+>>>>>>> Stashed changes
