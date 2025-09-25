@@ -24,7 +24,7 @@ function Home() {
                 className="display-4 fw-bold mb-4"
                 style={{ color: "#416adcff", fontSize: "2.0 rem" }}
               >
-                FPT Car hãy sủa theo cách của bạn
+                FPT EV Secondhand Marketplace
               </h6>
 
               <p
@@ -36,7 +36,7 @@ function Home() {
               <div className="d-flex gap-3 flex-wrap">
                 <Button
                   as={Link}
-                  to="/buy"
+                  to="/battery"
                   variant="light"
                   size="lg"
                   className="px-4 py-2 fw-semibold"
@@ -46,7 +46,7 @@ function Home() {
                 </Button>
                 <Button
                   as={Link}
-                  to="/sell"
+                  to="/cars"
                   variant="outline-light"
                   size="lg"
                   className="px-4 py-2 fw-semibold"
@@ -58,6 +58,21 @@ function Home() {
                 >
                   Tìm xe
                 </Button>
+
+                <Button
+                  as={Link}
+                  to="/cars"
+                  variant="outline-light"
+                  size="lg"
+                  className="px-4 py-2 fw-semibold"
+                  style={{
+                    color: "#416adcff",
+                    borderColor: "#416adcff",
+                    borderWidth: "1.5px",
+                  }}
+                >
+                  Đăng bài
+                </Button>
               </div>
             </Col>
             {/* Col trống để giữ chỗ cho phần xe bên phải */}
@@ -68,7 +83,7 @@ function Home() {
 
       {/* Features Section - Phần tính năng nổi bật */}
       <Container>
-        <h2 className="text-center mb-5 fw-bold text-primary">
+        <h2 className="text-center mb-5 fw-bold text-primary pt-4">
           Tại Sao Chọn Chúng Tôi?
         </h2>
 

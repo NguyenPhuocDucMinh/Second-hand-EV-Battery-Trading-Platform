@@ -21,7 +21,7 @@ function AppNavbar({ isLoggedIn, setIsLoggedIn }) {
       expand="lg" 
       className="shadow-sm sticky-top"
       style={{ 
-        background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+        background: ' #5fcff1ff ',
         padding: '1rem 0'
       }}
       variant="dark"
@@ -34,7 +34,7 @@ function AppNavbar({ isLoggedIn, setIsLoggedIn }) {
           className="fw-bold fs-3 text-white"
           style={{ textDecoration: 'none' }}
         >
-          <span style={{ color: '#FFD700' }}>EV Battery Hub</span>
+          <span style={{ color: '#ffffffff' }}>EV Battery Hub</span>
         </Navbar.Brand>
 
         {/* Nút toggle cho mobile */}
