@@ -1,173 +1,153 @@
-import { Link, useNavigate, useLocation } from "react-router-dom"
-import { Navbar, Nav, Container, NavDropdown, Button } from "react-bootstrap"
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Navbar, Nav, Container, NavDropdown, Button } from "react-bootstrap";
+import "./MegaMenu.css"; // Import custom CSS
 
 function AppNavbar({ isLoggedIn, setIsLoggedIn }) {
-  const navigate = useNavigate()
-  const location = useLocation() // Lấy thông tin đường dẫn hiện tại
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  // Xử lý đăng xuất
   const handleLogout = () => {
-    setIsLoggedIn(false)        // Cập nhật trạng thái đăng nhập
-    navigate("/")               // Điều hướng về trang chủ
-  }
+    setIsLoggedIn(false);
+    navigate("/");
+  };
 
-  // Kiểm tra link có đang active không
-  const isActiveLink = (path) => {
-    return location.pathname === path
-  }
+  const isActiveLink = (path) => location.pathname === path;
 
   return (
-    <Navbar 
-      expand="lg" 
-      className="shadow-sm sticky-top"
-      style={{ 
-        background: ' #5fcff1ff ',
-        padding: '1rem 0'
-      }}
+    <Navbar
+      expand="lg"
+      className="shadow-sm sticky-top app-navbar"
       variant="dark"
     >
       <Container>
-        {/* Logo và tên thương hiệu */}
-        <Navbar.Brand 
-          as={Link} 
-          to="/" 
-          className="fw-bold fs-3 text-white"
-          style={{ textDecoration: 'none' }}
-        >
-          <span style={{ color: '#ffffffff' }}>EV Battery Hub</span>
+        <Navbar.Brand as={Link} to="/" className="fw-bold fs-3 text-white">
+          <span>EV Battery Hub</span>
         </Navbar.Brand>
-
-        {/* Nút toggle cho mobile */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        
         <Navbar.Collapse id="basic-navbar-nav">
-          {/* Menu điều hướng chính */}
           <Nav className="ms-auto align-items-center">
-            <Nav.Link 
-              as={Link} 
-              to="/" 
-              className={`fw-semibold mx-2 ${isActiveLink('/') ? 'active' : ''}`}
-              style={{ 
-                color: isActiveLink('/') ? '#FFD700' : 'white',
-                borderBottom: isActiveLink('/') ? '2px solid #FFD700' : 'none',
-                paddingBottom: '8px'
-              }}
+            <Nav.Link
+              as={Link}
+              to="/"
+              className={`fw-semibold mx-2 nav-link-custom ${
+                isActiveLink("/") ? "active" : ""
+              }`}
             >
-            Trang Chủ
+              Trang Chủ
             </Nav.Link>
 
-            <Nav.Link 
-              as={Link} 
-              to="/buy" 
-              className={`fw-semibold mx-2 ${isActiveLink('/buy') ? 'active' : ''}`}
-              style={{ 
-                color: isActiveLink('/buy') ? '#FFD700' : 'white',
-                borderBottom: isActiveLink('/buy') ? '2px solid #FFD700' : 'none',
-                paddingBottom: '8px'
-              }}
+            <NavDropdown
+              title={<span className="fw-semibold text-white">Danh mục</span>}
+              id="buy-dropdown"
+              className="mx-2 multi-level-dropdown"
             >
-            Mua Pin
+              <NavDropdown.Item className="dropdown-submenu">
+                <span className="submenu-title">Xe ▸</span>
+                <ul className="submenu">
+                  <li>
+                    <Link to="/products/xe-dien" className="dropdown-item">
+                      Xe điện
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/products/xe-may-dien" className="dropdown-item">
+                      Xe máy điện
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/products/xe-dap-dien" className="dropdown-item">
+                      Xe đạp điện
+                    </Link>
+                  </li>
+                </ul>
+              </NavDropdown.Item>
+              <NavDropdown.Item className="dropdown-submenu">
+                <span className="submenu-title">Pin ▸</span>
+                <ul className="submenu">
+                  <li>
+                    <Link to="/products/pin-xe" className="dropdown-item">
+                      Pin xe điện
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/products/pin-du-phong" className="dropdown-item">
+                      Pin dự phòng
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/products/pin-cu" className="dropdown-item">
+                      Pin second-hand
+                    </Link>
+                  </li>
+                </ul>
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            <Nav.Link
+              as={Link}
+              to="/support"
+              className={`fw-semibold mx-2 nav-link-custom ${
+                isActiveLink("/support") ? "active" : ""
+              }`}
+            >
+              Hỗ Trợ
             </Nav.Link>
 
-            <Nav.Link 
-              as={Link} 
-              to="/sell" 
-              className={`fw-semibold mx-2 ${isActiveLink('/sell') ? 'active' : ''}`}
-              style={{ 
-                color: isActiveLink('/sell') ? '#FFD700' : 'white',
-                borderBottom: isActiveLink('/sell') ? '2px solid #FFD700' : 'none',
-                paddingBottom: '8px'
-              }}
-            >
-            Bán Pin
-            </Nav.Link>
-
-            <Nav.Link 
-              as={Link} 
-              to="/support" 
-              className={`fw-semibold mx-2 ${isActiveLink('/support') ? 'active' : ''}`}
-              style={{ 
-                color: isActiveLink('/support') ? '#FFD700' : 'white',
-                borderBottom: isActiveLink('/support') ? '2px solid #FFD700' : 'none',
-                paddingBottom: '8px'
-              }}
-            >
-            Hỗ Trợ
-            </Nav.Link>
-
-            <Nav.Link 
-              as={Link} 
-              to="/notifications" 
-              className={`fw-semibold mx-2 position-relative ${isActiveLink('/notifications') ? 'active' : ''}`}
-              style={{ 
-                color: isActiveLink('/notifications') ? '#FFD700' : 'white',
-                borderBottom: isActiveLink('/notifications') ? '2px solid #FFD700' : 'none',
-                paddingBottom: '8px'
-              }}
+            <Nav.Link
+              as={Link}
+              to="/notifications"
+              className={`fw-semibold mx-2 position-relative nav-link-custom ${
+                isActiveLink("/notifications") ? "active" : ""
+              }`}
             >
               Thông Báo
-              {/* Badge thông báo mới */}
-              <span 
-                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                style={{ fontSize: '0.6rem' }}
-              >
+              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge">
                 3
               </span>
             </Nav.Link>
 
-            {/* Phần tài khoản người dùng */}
             {isLoggedIn ? (
-              <NavDropdown 
-                title={
-                  <span className="text-white fw-semibold">
-                    👤 Tài Khoản
-                  </span>
-                } 
+              <NavDropdown
+                title={<span className="text-white fw-semibold">👤 Tài Khoản</span>}
                 id="basic-nav-dropdown"
                 className="mx-2"
                 menuVariant="light"
               >
                 <NavDropdown.Item as={Link} to="/account">
-                Hồ Sơ Cá Nhân
+                  Hồ Sơ Cá Nhân
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/orders">
-                Đơn Hàng Của Tôi
+                  Đơn Hàng Của Tôi
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/favorites">
-                Yêu Thích
+                  Yêu Thích
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/settings">
-                Cài Đặt
+                  Cài Đặt
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item 
+                <NavDropdown.Item
                   onClick={handleLogout}
                   className="text-danger fw-semibold"
                 >
-                Đăng Xuất
+                  Đăng Xuất
                 </NavDropdown.Item>
               </NavDropdown>
             ) : (
-              // Nút đăng nhập cho người dùng chưa đăng nhập
               <Button
                 as={Link}
                 to="/login"
                 variant="light"
-                className="fw-bold ms-3 px-4"
-                style={{ 
-                  borderRadius: '25px',
-                  border: '2px solid white',
-                  color: '#667eea'
-                }}
+                className="fw-bold ms-3 px-4 login-button"
               >
-              Đăng Nhập
+                Đăng Nhập
               </Button>
             )}
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  )
+  );
 }
 
-export default AppNavbar
+export default AppNavbar;
