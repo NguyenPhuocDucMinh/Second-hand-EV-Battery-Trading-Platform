@@ -3,6 +3,8 @@ import AppNavbar from "./components/Navbar"
 import Home from "./pages/Home"
 import Login from "./pages/auth/Login"
 import Register from "./pages/auth/Register"
+import CarListings from "./pages/listings/CarListings"
+import PinListings from "./pages/listings/PinListings"
 import { useState, useEffect } from "react"
 import { Container } from "react-bootstrap"
 
@@ -15,7 +17,7 @@ function App() {
   useEffect(() => {
     const savedLogin = localStorage.getItem("isLoggedIn")
     const savedUserInfo = localStorage.getItem("userInfo")
-    
+
     if (savedLogin === "true") {
       setIsLoggedIn(true)
       if (savedUserInfo) {
@@ -48,23 +50,27 @@ function App() {
   return (
     <Router>
       {/* Navbar cố định ở trên */}
-      <AppNavbar 
-        isLoggedIn={isLoggedIn} 
+      <AppNavbar
+        isLoggedIn={isLoggedIn}
         setIsLoggedIn={setIsLoggedIn}
         userInfo={userInfo}
       />
-      
+
       {/* Nội dung chính */}
       <main style={{ minHeight: 'calc(100vh - 80px)' }}>
         <Routes>
           {/* Trang chủ */}
-          <Route 
-            path="/" 
-            element={<Home isLoggedIn={isLoggedIn} />} 
+          <Route
+            path="/"
+            element={<Home isLoggedIn={isLoggedIn} />}
           />
-          
+
           {/* Trang mua pin */}
-          <Route 
+          <Route path="/battery" element={<PinListings />} />
+
+          {/* Trang bán pin */}
+          <Route path="/cars" element={<CarListings/>} />
+          {/* <Route 
             path="/buy" 
             element={
               <Container className="py-5">
@@ -74,10 +80,10 @@ function App() {
                 </div>
               </Container>
             } 
-          />
-          
+          /> */}
+
           {/* Trang bán pin */}
-          <Route 
+          {/* <Route 
             path="/sell" 
             element={
               <Container className="py-5">
@@ -87,11 +93,11 @@ function App() {
                 </div>
               </Container>
             } 
-          />
-          
+          /> */}
+
           {/* Trang hỗ trợ */}
-          <Route 
-            path="/support" 
+          <Route
+            path="/support"
             element={
               <Container className="py-5">
                 <div className="text-center">
@@ -99,12 +105,12 @@ function App() {
                   <p className="text-muted">Liên hệ: support@evbatteryhub.com</p>
                 </div>
               </Container>
-            } 
+            }
           />
-          
+
           {/* Trang thông báo */}
-          <Route 
-            path="/notifications" 
+          <Route
+            path="/notifications"
             element={
               <Container className="py-5">
                 <div className="text-center">
@@ -112,12 +118,12 @@ function App() {
                   <p className="text-muted">Bạn chưa có thông báo mới</p>
                 </div>
               </Container>
-            } 
+            }
           />
-          
+
           {/* Trang tài khoản */}
-          <Route 
-            path="/account" 
+          <Route
+            path="/account"
             element={
               <Container className="py-5">
                 <div className="text-center">
@@ -131,12 +137,12 @@ function App() {
                   )}
                 </div>
               </Container>
-            } 
+            }
           />
 
           {/* Các trang mới */}
-          <Route 
-            path="/orders" 
+          <Route
+            path="/orders"
             element={
               <Container className="py-5">
                 <div className="text-center">
@@ -144,11 +150,11 @@ function App() {
                   <p className="text-muted">Tính năng đang được phát triển...</p>
                 </div>
               </Container>
-            } 
+            }
           />
 
-          <Route 
-            path="/favorites" 
+          <Route
+            path="/favorites"
             element={
               <Container className="py-5">
                 <div className="text-center">
@@ -156,11 +162,11 @@ function App() {
                   <p className="text-muted">Tính năng đang được phát triển...</p>
                 </div>
               </Container>
-            } 
+            }
           />
 
-          <Route 
-            path="/settings" 
+          <Route
+            path="/settings"
             element={
               <Container className="py-5">
                 <div className="text-center">
@@ -168,40 +174,40 @@ function App() {
                   <p className="text-muted">Tính năng đang được phát triển...</p>
                 </div>
               </Container>
-            } 
+            }
           />
-          
+
           {/* Trang đăng nhập */}
-          <Route 
-            path="/login" 
+          <Route
+            path="/login"
             element={
-              <Login 
-                setIsLoggedIn={setIsLoggedIn} 
+              <Login
+                setIsLoggedIn={setIsLoggedIn}
                 setUserInfo={setUserInfo}
               />
-            } 
+            }
           />
 
           {/* Trang đăng ký */}
-          <Route 
-            path="/register" 
+          <Route
+            path="/register"
             element={
-              <Register 
-                setIsLoggedIn={setIsLoggedIn} 
+              <Register
+                setIsLoggedIn={setIsLoggedIn}
                 setUserInfo={setUserInfo}
               />
-            } 
+            }
           />
 
           {/* Redirect từ /auth cũ đến /login */}
-          <Route 
-            path="/auth" 
+          <Route
+            path="/auth"
             element={
-              <Login 
-                setIsLoggedIn={setIsLoggedIn} 
+              <Login
+                setIsLoggedIn={setIsLoggedIn}
                 setUserInfo={setUserInfo}
               />
-            } 
+            }
           />
         </Routes>
       </main>
